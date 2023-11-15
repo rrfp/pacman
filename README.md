@@ -2,16 +2,25 @@
 #include <locale.h> 
 #include <stdlib.h> 
 #include <stdbool.h>
+#include <conio.h>
 
 #define vazio '.' 
-#define parede vertical '|' 
-#define parede horizontal '-' 
+#define paredeV '|' 
+#define paredeH '-' 
 #define heroi '@' 
 #define fantasma 'f' 
 #define pilula 'p' 
 #define explosao 'e'
 
-char** mapa; int linhas; int colunas; int posX, posY; // Posição do personagem '@' int pilulasColetadas = 0; // Número de pílulas coletadas float explodiuMapa = false; // Variável para verificar se o mapa explodiu
+char** mapa;
+int linhas;
+int colunas;
+int posX, posY; // Posição do personagem '@'
+int fantasmaX,fantasmaY; // Posição do fantasma 'f'
+int pilulasColetadas = 0; // Número de pílulas coletadas
+int podeAndar;
+void fantasma;
+void movimentarfantasma;
 
 void imprimirMapa() 
 { system("cls"); // Limpa a tela 
@@ -62,10 +71,8 @@ for (int i = 0; i < linhas; i++)
 char movimento,explodiuMapa;
 while (1) 
 {
-  imprimirMapa();
+	imprimirMapa();
     
-
-    char movimento;
     printf("Use w para cima, a para a esquerda, s para baixo, d para a direita, e para explodir o mapa ou f para sair:\n ");
     scanf(" %c", &movimento);
 
@@ -115,11 +122,11 @@ while (1)
     }
     if (explodiuMapa) 
 	{
-        printf("**********\n");
-        printf("**********\n");
-        printf("**********\n");
-        printf("**********\n");
-        printf("**********\n");
+        printf("|--------|\n");
+        printf("|    ....|\n");
+        printf("|   @**|.|\n");
+        printf("|..|.**..|\n");
+        printf("|--------|\n");
         break;
     } else if (movimento == 'f') 
 	{
@@ -128,10 +135,64 @@ while (1)
 }
 
 // Libera a memória
-for (int i = 0; i < linhas; i++) {
+for (int i = 0; i < linhas; i++) 
+{
     free(mapa[i]);
 }
 free(mapa);
 
 return 0;
 }
+
+void fantasmas()
+{
+	for (int i=0;i<linhas;i++)
+	{
+		for(int j=0;j<colunas;j++)
+		{
+			if(mapa[i][j] == fantasmas)
+			{
+				fantasmaX = i;
+                fantasmaY = j;
+		}
+		movimentarfantasma();
+	}
+}
+}
+void movimentarfantasma()
+{
+	srand(time(0));
+	int posicao = rand()%4; // 0: cima, 1: esquerda, 2: baixo, 3: direita
+	int opcoes[4][2] = {
+		{xAtual,yAtual+1};	//baixo
+		{xAtual+1,yAtual};	//dir
+		{xAtual,yAtual-1};	//esq		
+		{xAtual-1,yAtual};	//cima
+	}
+	if podeAndar(opcoes[posicao][0];opcoes[posicao][1])
+	{
+		mapa[fantasmaX][fantasmaY] = vazio;
+		mapa[x][y] = fantasma;
+		fantasmaX = x;
+		fantasmaY = y;
+		
+	}
+	
+}
+int podeAndar(int x,int y)
+{
+	if(mapa[x][y] == paredeV){
+		return 0;
+	}
+	if(mapa[x][y] == paredeH){
+		return 0;
+	}
+	if(mapa[x][y] == fantasma){
+		return 0;
+	}
+	if(mapa[x][y] == pilula){
+		return 0;
+	}
+	return 1;
+}
+	
